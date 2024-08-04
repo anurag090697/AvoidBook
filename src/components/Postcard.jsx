@@ -4,10 +4,10 @@ import React, { useState } from "react";
 import { FaHeart } from "react-icons/fa";
 
 function Postcard(props) {
-  console.log(Object.keys(props.data.topic_submissions));
+//   console.log(Object.keys(props.data.topic_submissions));
   const [like, setLike] = useState(false);
   return (
-    <div className='w-fit border shadow-xl select-none w-[500px]'>
+    <div className=' border shadow-xl select-none max-w-[500px]'>
       <div className='flex items-center justify-start gap-4 font-medium dark:text-white px-4 py-2'>
         <img
           src={

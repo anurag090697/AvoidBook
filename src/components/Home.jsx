@@ -12,10 +12,17 @@ const ACCESS_KEY = import.meta.env.VITE_UNSPLASH_ACCESS_KEY;
 // console.log(API_KEY, ACCESS_KEY);
 function Home() {
   const [data, setData] = useState();
+  const [feed, setFeed] = useState();
+
   useEffect(() => {
-    // getData();
-    setData(arr.data.results);
+    getData();
   }, []);
+
+  useEffect(() => {
+    if (data) {
+      setData([...data, ...feed]);
+    } else setData(feed);
+  }, [feed]);
   const query = ["nature", "cat", "dog", "car", "pets", "travel"];
   async function getData() {
     try {
@@ -24,13 +31,19 @@ function Home() {
           query[Math.floor(Math.random() * 6)]
         }&page=${"1"}`
       );
-      console.log(response);
+      //   return response.data.results;
+
+      if (response) setFeed(response.data.results);
+      //   console.log(response.data.results);
     } catch (error) {
       console.error("Error fetching data:", error);
     }
   }
+  async function setMore() {
+    let tm2 = await getData().then(setFeed(tm2));
+  }
 
-//   console.log(data);
+  //   console.log(data);
   return (
     <div className='w-full dark:bg-slate-700 py-6 '>
       <div className='text-3xl w-fit py-10 px-6 w-[500px] text-center max-w-full mx-auto border shadow-lg dark:text-white'>
@@ -44,7 +57,7 @@ function Home() {
         </div>
         <h2> Welcome To AvoidBook</h2>
       </div>
-      <div className="flex flex-col gap-10 items-center justify-center py-10">
+      <div className='flex flex-col gap-10 items-center justify-center py-10'>
         {data ? (
           data.map((ele, idx) => {
             return <Postcard data={ele} key={idx}></Postcard>;
@@ -54,6 +67,12 @@ function Home() {
             Please Wait
           </p>
         )}
+      </div>
+      <div
+        className='text-center text-2xl font-medium text-sky-500 cursor-pointer'
+        onClick={() => setMore()}
+      >
+        {data ? "Load More..." : ""}
       </div>
     </div>
   );
