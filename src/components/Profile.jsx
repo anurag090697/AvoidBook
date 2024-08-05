@@ -4,23 +4,29 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useLocation, useParams } from "react-router-dom";
 const ACCESS_KEY = import.meta.env.VITE_UNSPLASH_ACCESS_KEY;
-function Postdetailed() {
+function Profile() {
   const location = useLocation();
   const { data } = location.state || {};
   //   const { data } = useParams();
   //   const data = location.state?.props.data || {};
- 
-  useEffect(() => {
-    getuser();
-  }, []);
-    
+  const [userid, setUserid] = useState();
+  const [profile, setProfile] = useState();
+  const [photos, setPhotos] = useState();
+  console.log(data);
+  async function getuser(str) {
+    let response = await axios.get(
+      `https://api.unsplash.com/users/${userid}?client_id=${ACCESS_KEY}`
+    );
+    setProfile(response.data);
+    console.log(response.data);
+  }
+
   useEffect(() => {
     setUserid(data.user.username);
-    console.log(userid);
+    if (userid) getuser();
+    // console.log(data.user.username);
   }, [data]);
-    
- 
-  console.log(data);
+
   return (
     <div className='w-full dark:bg-slate-700 py-6 '>
       <div className='text-3xl w-fit py-10 px-6 w-[500px] text-center max-w-full mx-auto border shadow-lg dark:text-white flex'>
@@ -40,19 +46,19 @@ function Postdetailed() {
           <div className='flex text-lg font-medium items-start justify-center text-gray-600 gap-2 '>
             <div className='flex flex-col w-1/3 items-center'>
               <span className='bg-gray-200 rounded-full w-16 h-16 flex items-center justify-center text-sky-600'>
-                0
+                {profile ? profile.photos.length : "0"}
               </span>
               <span>Posts</span>
             </div>
             <div className='flex flex-col w-1/3 items-center'>
               <span className='bg-gray-200 rounded-full w-16 h-16 flex items-center justify-center text-sky-600'>
-                0
+                {profile ? profile.followers_count : "0"}
               </span>
               <span>Followers</span>
             </div>
             <div className='flex flex-col w-1/3 items-center'>
               <span className='bg-gray-200 rounded-full w-16 h-16 flex items-center justify-center text-sky-600'>
-                0
+                {profile ? profile.following_count : "0"}
               </span>
               <span>Following</span>
             </div>
@@ -67,4 +73,4 @@ function Postdetailed() {
   );
 }
 
-export default Postdetailed;
+export default Profile;
